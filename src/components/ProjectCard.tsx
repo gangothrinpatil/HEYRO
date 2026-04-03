@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, MessageCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import type { Project } from "@/data/projects";
 import projectThumbnails from "@/data/projectThumbnails";
 
@@ -85,7 +86,7 @@ export default function ProjectCard({ project, completed }: Props) {
               window.dispatchEvent(new CustomEvent('open-heyro-chat', { detail: { projectId: project.id, projectTitle: project.title } }));
             }}
           >
-            <MessageCircle className="h-3.5 w-3.5" />
+            <img src={logoImg} alt="Heyro" className="h-3.5 w-3.5 object-contain" />
             Ask Heyro
           </Button>
         </div>
