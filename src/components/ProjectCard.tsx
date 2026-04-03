@@ -78,14 +78,14 @@ export default function ProjectCard({ project, completed }: Props) {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full gap-2 text-xs font-medium text-muted-foreground hover:text-primary hover:bg-primary/5"
+            className="w-full gap-2 text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/5"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               window.dispatchEvent(new CustomEvent('open-heyro-chat', { detail: { projectId: project.id, projectTitle: project.title } }));
             }}
           >
-            <img src="/logo.png" alt="Heyro" className="h-8 w-8 object-contain" referrerPolicy="no-referrer" />
+            <img src="/logo.png" alt="Heyro" className="h-10 w-10 object-contain" referrerPolicy="no-referrer" />
             Ask Heyro
           </Button>
         </div>
