@@ -4,6 +4,7 @@ import { Cpu, BookOpen, Rocket, Menu } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import logoImg from "@/assets/logo.png";
 
 const navLinks = [
   { to: "/", label: "Home", icon: Rocket },
@@ -21,7 +22,7 @@ export default function Navbar() {
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="flex h-12 items-center justify-center overflow-hidden">
-            <img src="/logo.png" alt="Heyro Logo" className="h-full w-auto object-contain" referrerPolicy="no-referrer" />
+            <img src={logoImg} alt="Heyro Logo" className="h-full w-auto object-contain" referrerPolicy="no-referrer" />
           </div>
           <span className="font-display text-xl font-bold tracking-tight text-foreground">
             Heyro

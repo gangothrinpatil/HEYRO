@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CheckCircle, Lightbulb, Cable, Code, Upload, Trophy, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import logoImg from "@/assets/logo.png";
 
 const difficultyColors: Record<string, string> = {
   easy: "bg-easy/10 text-easy border-easy/20",

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useAssistantStore } from "@/hooks/useAssistant";
 import { GoogleGenAI } from "@google/genai";
 import ReactMarkdown from "react-markdown";
+import logoImg from "@/assets/logo.png";
 
 interface Message {
   role: "user" | "model";
@@ -107,7 +108,7 @@ export default function NemoAssistant() {
             className="relative flex h-14 w-14 items-center justify-center rounded-full bg-white dark:bg-slate-900 shadow-lg transition-all duration-300 hover:scale-105 overflow-hidden border border-slate-200 dark:border-slate-700"
             aria-label="Open Heyro assistant"
           >
-            <img src="/logo.png" alt="Heyro Logo" className="h-10 w-10 object-contain" referrerPolicy="no-referrer" />
+            <img src={logoImg} alt="Heyro Logo" className="h-10 w-10 object-contain" referrerPolicy="no-referrer" />
           </button>
         </div>
       )}
@@ -119,7 +120,7 @@ export default function NemoAssistant() {
           <div className="flex items-center justify-between border-b border-slate-100 bg-white/50 px-6 py-5 dark:bg-slate-900/50 dark:border-slate-800">
             <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-2xl bg-slate-50 shadow-sm border border-slate-100 dark:bg-slate-800 dark:border-slate-700">
-                <img src="/logo.png" alt="Heyro Logo" className="h-6 w-6 object-contain" referrerPolicy="no-referrer" />
+                <img src={logoImg} alt="Heyro Logo" className="h-6 w-6 object-contain" referrerPolicy="no-referrer" />
               </div>
               <div>
                 <span className="block font-display text-base font-bold tracking-tight text-slate-900 dark:text-white">Heyro Assistant</span>

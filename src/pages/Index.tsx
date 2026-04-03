@@ -6,6 +6,7 @@ import { useProgress } from "@/hooks/useProgress";
 import { projects } from "@/data/projects";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Cpu, Sparkles } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 
 const classInfo = [
   { level: "6", label: "Class 6", desc: "Light sensors, buzzers & tilt detection", count: 0 },
@@ -36,7 +37,7 @@ export default function Index() {
               {totalProjects} Curated Arduino Projects
             </div>
             <div className="mb-6">
-              <img src="/logo.png" alt="Heyro Logo" className="h-24 w-auto object-contain animate-fade-in-scale" referrerPolicy="no-referrer" />
+              <img src={logoImg} alt="Heyro Logo" className="h-24 w-auto object-contain animate-fade-in-scale" referrerPolicy="no-referrer" />
             </div>
             <h1 className="font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
               Build the future,{" "}

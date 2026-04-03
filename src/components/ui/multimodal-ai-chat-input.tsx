@@ -25,6 +25,7 @@ export interface Attachment {
   name: string;
   contentType: string;
   size: number;
+  base64?: string;
 }
 
 export interface UIMessage {
@@ -451,7 +452,9 @@ function PureMultimodalInput({
   const uploadFile = async (file: File): Promise<Attachment | undefined> => {
     console.log(`MOCK: Simulating upload for file: ${file.name}`);
     return new Promise((resolve) => {
-      setTimeout(() => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = (reader.result as string).split(',')[1];
         try {
           // Use URL.createObjectURL for client-side preview. Remember to revoke!
           const mockUrl = URL.createObjectURL(file);
@@ -460,6 +463,7 @@ function PureMultimodalInput({
             name: file.name,
             contentType: file.type || 'application/octet-stream',
             size: file.size,
+            base64: base64String,
           };
           console.log(`MOCK: Upload successful for ${file.name}`);
           resolve(mockAttachment);
@@ -470,7 +474,13 @@ function PureMultimodalInput({
            // Remove file name from upload queue
            setUploadQueue(currentQueue => currentQueue.filter(name => name !== file.name));
         }
-      }, 700); // Simulate delay
+      };
+      reader.onerror = () => {
+        console.error('Failed to read file as base64');
+        setUploadQueue(currentQueue => currentQueue.filter(name => name !== file.name));
+        resolve(undefined);
+      };
+      reader.readAsDataURL(file);
     });
   };
 

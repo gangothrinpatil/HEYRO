@@ -5,6 +5,7 @@ import { GoogleGenAI } from "@google/genai";
 import ReactMarkdown from "react-markdown";
 import { PureMultimodalInput, type Attachment, type UIMessage } from "@/components/ui/multimodal-ai-chat-input";
 import { ShiningText } from "@/components/ui/shining-text";
+import logoImg from "@/assets/logo.png";
 
 interface Message {
   id: string;
@@ -92,7 +93,7 @@ export default function ProjectAssistantPanel({ isOpen, onOpenChange, projectTit
         <SheetHeader className="px-6 py-5 border-b border-slate-200 bg-white/80 backdrop-blur-xl dark:bg-slate-900/80 dark:border-slate-800">
           <SheetTitle className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 dark:bg-slate-800 dark:border-slate-700">
-              <img src="/logo.png" alt="Heyro Logo" className="h-7 w-7 object-contain" referrerPolicy="no-referrer" />
+              <img src={logoImg} alt="Heyro Logo" className="h-7 w-7 object-contain" referrerPolicy="no-referrer" />
             </div>
             <div className="flex flex-col items-start">
               {isGenerating ? (
