@@ -86,7 +86,7 @@ export default function ProjectCard({ project, completed }: Props) {
               window.dispatchEvent(new CustomEvent('open-heyro-chat', { detail: { projectId: project.id, projectTitle: project.title } }));
             }}
           >
-            <img src={logoImg} alt="Heyro" className="h-3.5 w-3.5 object-contain" />
+            <img src={logoImg} alt="Heyro" className="h-3.5 w-3.5 object-contain" referrerPolicy="no-referrer" />
             Ask Heyro
           </Button>
         </div>
