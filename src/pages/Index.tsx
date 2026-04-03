@@ -36,9 +36,14 @@ export default function Index() {
               <Sparkles className="h-3 w-3 text-primary" />
               {totalProjects} Curated Arduino Projects
             </div>
-            <div className="mb-6">
-              <img src={logoImg} alt="Heyro Logo" className="h-24 w-auto object-contain animate-fade-in-scale" referrerPolicy="no-referrer" />
-            </div>
+      <div className="mb-6">
+            <img 
+              src={logoImg} 
+              alt="Heyro Logo" 
+              className="h-24 w-auto object-contain mx-auto" 
+              style={{ display: 'block' }}
+            />
+          </div>
             <h1 className="font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-foreground md:text-5xl lg:text-6xl text-balance">
               Build the future,{" "}
               <span className="text-primary">one circuit at a time.</span>

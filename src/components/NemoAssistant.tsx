@@ -46,6 +46,19 @@ export default function NemoAssistant() {
     }
   }, [isOpen, context, messages.length]);
 
+  // Listen for open-heyro-chat event from ProjectCard
+  useEffect(() => {
+    const handleOpenChat = (e: CustomEvent) => {
+      const { projectTitle } = e.detail;
+      openAssistant(projectTitle);
+    };
+    
+    window.addEventListener('open-heyro-chat', handleOpenChat as EventListener);
+    return () => {
+      window.removeEventListener('open-heyro-chat', handleOpenChat as EventListener);
+    };
+  }, [openAssistant]);
+
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
