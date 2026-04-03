@@ -933,53 +933,79 @@ void loop() {
     title: "Smart Fan",
     classLevel: "additional",
     difficulty: "easy",
-    description: "A temperature-controlled fan that adjusts speed based on room temperature. Simple version using LM35 sensor.",
+    description: "A temperature-controlled fan that turns on automatically when temperature exceeds 30°C. Uses DHT22 sensor for accurate temperature and humidity readings.",
     videoUrl: "https://www.youtube.com/watch?v=kyz9NSA0oow",
-    whatYouLearn: ["Temperature sensing basics", "Motor speed control", "PWM output"],
+    whatYouLearn: ["Temperature sensing with DHT22", "Relay control for high voltage devices", "Threshold-based automation"],
     components: [
       { name: "Arduino UNO", description: "Controls fan based on temp", icon: "Cpu" },
-      { name: "LM35 Sensor", description: "Reads temperature", icon: "Thermometer" },
-      { name: "DC Motor", description: "The fan", icon: "Fan" },
-      { name: "Transistor", description: "Motor driver", icon: "Zap" },
+      { name: "DHT22 Sensor", description: "Reads temperature and humidity", icon: "Thermometer" },
+      { name: "Relay Module", description: "Switches fan on/off", icon: "ToggleLeft" },
+      { name: "DC Fan", description: "The cooling fan", icon: "Fan" },
       { name: "Breadboard & Wires", description: "Connections", icon: "Cable" }
     ],
     connectionSteps: [
-      { step: 1, instruction: "Connect LM35 VCC to 5V", pin: "5V", wireColor: "red" },
-      { step: 2, instruction: "Connect LM35 OUT to A0", pin: "A0", wireColor: "yellow" },
-      { step: 3, instruction: "Connect LM35 GND to GND", pin: "GND", wireColor: "black" },
-      { step: 4, instruction: "Connect transistor base through 1KΩ to pin 9", pin: "D9", wireColor: "green" },
-      { step: 5, instruction: "Connect motor through transistor to 5V and GND", pin: "5V", wireColor: "red" }
+      { step: 1, instruction: "Connect DHT22 VCC to 5V", pin: "5V", wireColor: "red" },
+      { step: 2, instruction: "Connect DHT22 DATA to pin 4", pin: "D4", wireColor: "yellow" },
+      { step: 3, instruction: "Connect DHT22 GND to GND", pin: "GND", wireColor: "black" },
+      { step: 4, instruction: "Connect Relay IN to pin 7", pin: "D7", wireColor: "green" },
+      { step: 5, instruction: "Connect Relay VCC to 5V", pin: "5V", wireColor: "red" },
+      { step: 6, instruction: "Connect Relay GND to GND", pin: "GND", wireColor: "black" }
     ],
-    signalExplanation: ["A0 reads temperature voltage.", "Pin 9 PWM controls fan speed via transistor.", "Higher temp = faster fan."],
-    code: `// Smart Fan - Temperature controlled
-int tempPin = A0;
-int fanPin = 9;
+    signalExplanation: ["DHT22 reads temperature and humidity from pin 4.", "Relay module connected to pin 7 controls fan power.", "Fan turns ON when temperature > 30°C."],
+    code: `#include <DHT.h>
+
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+#define RELAY_PIN 7
+
+DHT dht(DHTPIN, DHTTYPE);
+
+float temperature;
+float humidity;
 
 void setup() {
-  pinMode(fanPin, OUTPUT);
   Serial.begin(9600);
-  Serial.println("Smart Fan Ready!");
+  
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, LOW); // Fan OFF
+
+  dht.begin();
+
+  Serial.println("Smart Fan System Ready...");
 }
 
 void loop() {
-  int reading = analogRead(tempPin);
-  float tempC = (reading * 5.0 / 1024.0) * 100;
-  
-  int speed = 0;
-  if (tempC > 25) {
-    speed = map(tempC, 25, 45, 80, 255);
-    speed = constrain(speed, 80, 255);
+  temperature = dht.readTemperature();
+  humidity = dht.readHumidity();
+
+  if (isnan(temperature) || isnan(humidity)) {
+    Serial.println("Sensor error!");
+    return;
   }
-  
-  analogWrite(fanPin, speed);
-  Serial.print("Temp: "); Serial.print(tempC);
-  Serial.print("°C Fan: "); Serial.println(speed);
-  delay(1000);
+
+  Serial.print("Temp: ");
+  Serial.print(temperature);
+  Serial.print(" °C | Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  // Logic: Turn ON fan if temp > 30°C
+  if (temperature > 30) {
+    digitalWrite(RELAY_PIN, HIGH); // Fan ON
+    Serial.println("Fan ON");
+  } else {
+    digitalWrite(RELAY_PIN, LOW);  // Fan OFF
+    Serial.println("Fan OFF");
+  }
+
+  delay(2000);
 }`,
     codeExplanation: [
-      "LM35 voltage converted to Celsius",
-      "Fan speed mapped from temperature",
-      "Below 25°C fan stays off"
+      "DHT22 library reads temperature and humidity",
+      "Relay module controls fan power",
+      "Fan turns on when temperature exceeds 30°C",
+      "Reads temperature every 2 seconds"
     ]
   },
   {
