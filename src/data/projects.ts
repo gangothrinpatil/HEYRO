@@ -566,82 +566,89 @@ void loop() {
     title: "Automatic Smart Fan",
     classLevel: "8",
     difficulty: "hard",
-    description: "Create a smart fan that turns on automatically when the temperature rises! Uses a temperature sensor to monitor room temp and controls a DC motor fan.",
+    description: "Create a smart fan that turns on automatically when the temperature rises! Uses DHT22 sensor to monitor room temp and controls a fan via relay module.",
     videoUrl: "https://www.youtube.com/watch?v=kyz9NSA0oow",
     whatYouLearn: [
-      "How temperature sensors convert heat to voltage",
-      "How to control motor speed with PWM (analogWrite)",
+      "How DHT22 sensor reads temperature and humidity",
+      "How to control high-power devices with relay",
       "How to make automated climate control",
       "Real-world application: smart thermostat, auto AC"
     ],
     components: [
-      { name: "Arduino UNO", description: "Reads temperature and controls fan speed", icon: "Cpu" },
-      { name: "LM35 Temperature Sensor", description: "Outputs voltage proportional to temperature (10mV per °C)", icon: "Thermometer" },
-      { name: "DC Motor + Fan", description: "The fan that cools the room", icon: "Fan" },
-      { name: "Transistor (NPN)", description: "Acts as a switch to control the motor with Arduino", icon: "Zap" },
-      { name: "Diode (1N4007)", description: "Protects against motor's back-EMF voltage spikes", icon: "ArrowRight" },
+      { name: "Arduino UNO", description: "Reads temperature and controls fan", icon: "Cpu" },
+      { name: "DHT22 Sensor", description: "Reads temperature and humidity", icon: "Thermometer" },
+      { name: "Relay Module", description: "Switches fan on/off", icon: "ToggleLeft" },
+      { name: "DC Fan", description: "The fan that cools the room", icon: "Fan" },
       { name: "Breadboard & Wires", description: "For connections", icon: "Cable" }
     ],
     connectionSteps: [
-      { step: 1, instruction: "Connect LM35 left pin (VCC) to 5V", pin: "5V", wireColor: "red" },
-      { step: 2, instruction: "Connect LM35 middle pin (OUT) to A0", pin: "A0", wireColor: "yellow" },
-      { step: 3, instruction: "Connect LM35 right pin (GND) to GND", pin: "GND", wireColor: "black" },
-      { step: 4, instruction: "Connect transistor base through 1KΩ resistor to pin 9", pin: "D9", wireColor: "green" },
-      { step: 5, instruction: "Connect transistor collector to motor negative", pin: "-", wireColor: "blue" },
-      { step: 6, instruction: "Connect motor positive to 5V", pin: "5V", wireColor: "red" },
-      { step: 7, instruction: "Connect transistor emitter to GND", pin: "GND", wireColor: "black" },
-      { step: 8, instruction: "Connect diode across motor (cathode to +, anode to -)", pin: "-", wireColor: "white" }
+      { step: 1, instruction: "Connect DHT22 VCC to 5V", pin: "5V", wireColor: "red" },
+      { step: 2, instruction: "Connect DHT22 DATA to pin 4", pin: "D4", wireColor: "yellow" },
+      { step: 3, instruction: "Connect DHT22 GND to GND", pin: "GND", wireColor: "black" },
+      { step: 4, instruction: "Connect Relay IN to pin 7", pin: "D7", wireColor: "green" },
+      { step: 5, instruction: "Connect Relay VCC to 5V", pin: "5V", wireColor: "red" },
+      { step: 6, instruction: "Connect Relay GND to GND", pin: "GND", wireColor: "black" },
+      { step: 7, instruction: "Connect Fan to relay NC terminal and power", pin: "-", wireColor: "blue" }
     ],
     signalExplanation: [
-      "A0 reads temperature voltage: each 10mV = 1°C.",
-      "Pin 9 uses PWM (analogWrite 0-255) to control fan speed via transistor.",
-      "Below 25°C → Fan OFF. 25-30°C → Low speed. 30-35°C → Medium. Above 35°C → Full speed."
+      "DHT22 reads temperature and humidity from pin 4.",
+      "Relay connected to pin 7 controls fan power.",
+      "Fan turns ON when temperature exceeds 30°C."
     ],
-    code: `// Automatic Smart Fan
-// Class 8 - STEM Robotics Kit
+    code: `#include <DHT.h>
 
-int tempPin = A0;     // LM35 temperature sensor
-int fanPin = 9;       // Fan motor (via transistor) on PWM pin
-float temperature = 0;
+#define DHTPIN 4
+#define DHTTYPE DHT22
+
+#define RELAY_PIN 7
+
+DHT dht(DHTPIN, DHTTYPE);
+
+float temperature;
+float humidity;
 
 void setup() {
-  pinMode(fanPin, OUTPUT);
   Serial.begin(9600);
-  Serial.println("Smart Fan System Ready!");
+  
+  pinMode(RELAY_PIN, OUTPUT);
+  digitalWrite(RELAY_PIN, LOW); // Fan OFF
+
+  dht.begin();
+
+  Serial.println("Smart Fan System Ready...");
 }
 
 void loop() {
-  // Read temperature
-  int reading = analogRead(tempPin);
-  temperature = (reading * 5.0 / 1024.0) * 100;  // Convert to Celsius
-  
-  Serial.print("Temperature: ");
-  Serial.print(temperature);
-  Serial.print("°C  |  Fan: ");
-  
-  // Control fan speed based on temperature
-  if (temperature < 25) {
-    analogWrite(fanPin, 0);         // Fan OFF
-    Serial.println("OFF");
-  } else if (temperature < 30) {
-    analogWrite(fanPin, 100);       // Low speed
-    Serial.println("LOW (100/255)");
-  } else if (temperature < 35) {
-    analogWrite(fanPin, 180);       // Medium speed
-    Serial.println("MEDIUM (180/255)");
-  } else {
-    analogWrite(fanPin, 255);       // Full speed!
-    Serial.println("FULL SPEED! (255/255)");
+  temperature = dht.readTemperature();
+  humidity = dht.readHumidity();
+
+  if (isnan(temperature) || isnan(humidity)) {
+    Serial.println("Sensor error!");
+    return;
   }
-  
-  delay(1000);  // Read every second
+
+  Serial.print("Temp: ");
+  Serial.print(temperature);
+  Serial.print(" °C | Humidity: ");
+  Serial.print(humidity);
+  Serial.println(" %");
+
+  // Logic: Turn ON fan if temp > 30°C
+  if (temperature > 30) {
+    digitalWrite(RELAY_PIN, HIGH); // Fan ON
+    Serial.println("Fan ON");
+  } else {
+    digitalWrite(RELAY_PIN, LOW);  // Fan OFF
+    Serial.println("Fan OFF");
+  }
+
+  delay(2000);
 }`,
     codeExplanation: [
-      "LM35 outputs 10mV per degree Celsius",
-      "We convert analog reading (0-1023) to voltage, then to °C",
-      "analogWrite() sends PWM signal (0=off, 255=full) for variable speed",
-      "4 temperature zones with different fan speeds",
-      "Transistor amplifies Arduino's small signal to drive the motor"
+      "DHT22 library reads temperature and humidity",
+      "Relay module controls fan power",
+      "Fan turns on when temperature exceeds 30°C",
+      "Reads temperature every 2 seconds"
     ]
   },
   {
