@@ -3,7 +3,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
-import logoImg from "@/assets/logo.png";
 import type { Project } from "@/data/projects";
 import projectThumbnails from "@/data/projectThumbnails";
 
@@ -86,7 +85,7 @@ export default function ProjectCard({ project, completed }: Props) {
               window.dispatchEvent(new CustomEvent('open-heyro-chat', { detail: { projectId: project.id, projectTitle: project.title } }));
             }}
           >
-            <img src={logoImg} alt="Heyro" className="h-3.5 w-3.5 object-contain" />
+            <img src="/logo.png" alt="Heyro" className="h-3.5 w-3.5 object-contain" referrerPolicy="no-referrer" />
             Ask Heyro
           </Button>
         </div>
