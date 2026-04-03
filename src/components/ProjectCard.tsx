@@ -23,16 +23,16 @@ export default function ProjectCard({ project, completed }: Props) {
 
   return (
     <Link to={`/projects/${project.id}`}>
-      <Card className="group relative overflow-hidden border-border/50 bg-card transition-all duration-300 hover:border-primary/30 hover:shadow-sm">
+      <Card className="group relative overflow-hidden border-border/50 bg-card transition-all duration-300 hover:border-primary/30 hover:shadow-sm min-h-[480px]">
         {completed && (
-          <div className="absolute right-3 top-3 z-10">
-            <CheckCircle className="h-4 w-4 text-success" />
+          <div className="absolute right-4 top-4 z-10">
+            <CheckCircle className="h-6 w-6 text-success" />
           </div>
         )}
 
         {/* Thumbnail */}
         {thumbnail && (
-          <div className="relative h-80 w-full overflow-hidden bg-muted">
+          <div className="relative h-64 w-full overflow-hidden bg-muted">
             <img
               src={thumbnail}
               alt={project.title}
