@@ -163,26 +163,26 @@ export default function ProjectDetail() {
               </ul>
             </div>
             <div>
-              <h3 className="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-muted-foreground">Components</h3>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <h3 className="mb-6 font-mono text-sm font-medium uppercase tracking-widest text-muted-foreground">Components</h3>
+              <div className="grid gap-6 sm:grid-cols-2">
                 {project.components.map((comp) => {
                   const compImage = getComponentImage(comp.name);
                   return (
-                    <div key={comp.name} className="flex items-start gap-3 rounded-lg border border-border/50 p-3 transition-colors hover:border-primary/20">
+                    <div key={comp.name} className="flex items-start gap-5 rounded-xl border-2 border-border/60 p-5 transition-colors hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
                       {compImage ? (
                         <img
                           src={compImage}
                           alt={comp.name}
-                          className="h-10 w-10 rounded object-cover flex-shrink-0"
+                          className="h-28 w-28 rounded-lg object-cover flex-shrink-0 shadow-sm"
                           loading="lazy"
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-muted text-xs text-muted-foreground">IC</div>
+                        <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-lg bg-muted text-xl font-bold text-muted-foreground">IC</div>
                       )}
-                      <div>
-                        <p className="text-sm font-medium tracking-tight text-foreground">{comp.name}</p>
-                        <p className="text-xs text-muted-foreground">{comp.description}</p>
+                      <div className="min-w-0 flex-1 pt-1">
+                        <p className="text-base font-semibold tracking-tight text-foreground">{comp.name}</p>
+                        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{comp.description}</p>
                       </div>
                     </div>
                   );
