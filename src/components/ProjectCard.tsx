@@ -32,7 +32,7 @@ export default function ProjectCard({ project, completed }: Props) {
 
         {/* Thumbnail */}
         {thumbnail && (
-          <div className="relative h-56 w-full overflow-hidden bg-muted">
+          <div className="relative h-80 w-full overflow-hidden bg-muted">
             <img
               src={thumbnail}
               alt={project.title}
@@ -42,50 +42,50 @@ export default function ProjectCard({ project, completed }: Props) {
           </div>
         )}
 
-      <CardContent className="p-6 space-y-4">
-        <div className="flex items-center gap-2">
-          <Badge variant="outline" className={`text-xs font-medium uppercase tracking-wider border ${difficultyColors[project.difficulty]}`}>
+      <CardContent className="p-8 space-y-6">
+        <div className="flex items-center gap-3">
+          <Badge variant="outline" className={`text-sm font-medium uppercase tracking-wider border ${difficultyColors[project.difficulty]}`}>
             {project.difficulty}
           </Badge>
-          <Badge variant="outline" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <Badge variant="outline" className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
             {project.classLevel === "additional" ? "Extra" : `Class ${project.classLevel}`}
           </Badge>
         </div>
-        <h3 className="font-display text-lg font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
+        <h3 className="font-display text-xl font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
           {project.title}
         </h3>
-        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+        <p className="line-clamp-3 text-base leading-relaxed text-muted-foreground">
           {project.description}
         </p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-3">
           {project.components.slice(0, 3).map((c) => (
             <span
               key={c.name}
-              className="rounded-md border border-border/50 bg-muted/50 px-2 py-1 font-mono text-xs text-muted-foreground"
+              className="rounded-lg border border-border/50 bg-muted/50 px-3 py-1.5 font-mono text-sm text-muted-foreground"
             >
               {c.name}
             </span>
           ))}
           {project.components.length > 3 && (
-            <span className="rounded-md border border-border/50 bg-muted/50 px-2 py-1 font-mono text-xs text-muted-foreground">
+            <span className="rounded-lg border border-border/50 bg-muted/50 px-3 py-1.5 font-mono text-sm text-muted-foreground">
               +{project.components.length - 3}
             </span>
           )}
         </div>
         
         {/* Ask Heyro Button */}
-        <div className="pt-4 border-t border-border/50">
+        <div className="pt-6 border-t border-border/50">
           <Button
             variant="ghost"
             size="lg"
-            className="w-full gap-2 text-base font-medium text-muted-foreground hover:text-primary hover:bg-primary/5"
+            className="w-full gap-3 text-lg font-medium text-muted-foreground hover:text-primary hover:bg-primary/5"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
               window.dispatchEvent(new CustomEvent('open-heyro-chat', { detail: { projectId: project.id, projectTitle: project.title } }));
             }}
           >
-            <img src="/logo.png" alt="Heyro" className="h-8 w-8 object-contain" referrerPolicy="no-referrer" />
+            <img src="/logo.png" alt="Heyro" className="h-10 w-10 object-contain" referrerPolicy="no-referrer" />
             Ask Heyro
           </Button>
         </div>
