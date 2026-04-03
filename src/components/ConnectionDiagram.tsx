@@ -1,40 +1,7 @@
 import type { ConnectionStep } from "@/data/projects";
 
 // Diagram images
-
-const diagramImages: Record<string, string> = {
-  "automatic-street-light": "/diagrams/automatic-street-light.png",
-  "alcohol-detector-buzzer": "/diagrams/alcohol-detector-buzzer.png",
-  "tilt-alert-system": "/diagrams/tilt-alert-system.png",
-  "mini-timer": "/diagrams/mini-timer.png",
-  "disco-robots": "/diagrams/disco-robots.png",
-  "automatic-door-gate": "/diagrams/automatic-door-gate.png",
-  "automatic-smart-fan": "/diagrams/automatic-smart-fan.png",
-  "parking-light-system": "/diagrams/parking-light-system.png",
-  "smart-scale": "/diagrams/smart-scale.png",
-  "night-lamp": "/diagrams/night-lamp.png",
-  "smart-fan": "/diagrams/smart-fan.png",
-  "gas-leakage-alarm": "/diagrams/gas-leakage-alarm.png",
-  "smart-dustbin": "/diagrams/smart-dustbin.png",
-  "smart-home-model": "/diagrams/smart-home-model.png",
-  "smart-agriculture": "/diagrams/smart-agriculture.png",
-  "temperature-display-alarm": "/diagrams/temperature-display-alarm.png",
-  "obstacle-alert": "/diagrams/obstacle-alert.png",
-  "anti-theft-alarm": "/diagrams/anti-theft-alarm.png",
-  "automatic-parking-gate": "/diagrams/automatic-parking-gate.png",
-  "weather-monitoring": "/diagrams/weather-monitoring.png",
-  "smart-energy-saver": "/diagrams/smart-energy-saver.png",
-  "gas-safety-countdown": "/diagrams/gas-safety-countdown.png",
-  "touch-free-attendance": "/diagrams/touch-free-attendance.png",
-  "smart-air-quality": "/diagrams/smart-air-quality.png",
-  "automatic-gate-counter": "/diagrams/automatic-gate-counter.png",
-  "safety-helmet-alert": "/diagrams/safety-helmet-alert.png",
-  "room-occupancy": "/diagrams/room-occupancy.png",
-  "smart-bus-door": "/diagrams/smart-bus-door.png",
-  "smart-glasses-blind": "/diagrams/smart-glasses-blind.png",
-  "smart-cane-blind": "/diagrams/smart-cane-blind.png",
-  "smart-shoes-blind": "/diagrams/smart-shoes-blind.png",
-};
+const diagramModules = import.meta.glob<{ default: string }>('../assets/ASSETS/*.png', { eager: true });
 
 const wireColorMap: Record<string, string> = {
   red: "bg-destructive",
@@ -65,7 +32,8 @@ interface Props {
 }
 
 export default function ConnectionDiagram({ projectId, steps, signalExplanation }: Props) {
-  const diagramImage = projectId ? diagramImages[projectId] : undefined;
+  const pathKey = projectId ? Object.keys(diagramModules).find(p => p.endsWith(`${projectId}.png`)) : undefined;
+  const diagramImage = pathKey ? diagramModules[pathKey].default : undefined;
 
   return (
     <div className="space-y-6">

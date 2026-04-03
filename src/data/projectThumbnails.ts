@@ -1,35 +1,13 @@
-const projectThumbnails: Record<string, string> = {
-  "automatic-street-light": "/thumbnails/automatic-street-light.jpg",
-  "alcohol-detector-buzzer": "/thumbnails/alcohol-detector-buzzer.jpg",
-  "tilt-alert-system": "/thumbnails/tilt-alert-system.jpg",
-  "mini-timer": "/thumbnails/mini-timer.jpg",
-  "disco-robots": "/thumbnails/disco-robots.jpg",
-  "automatic-door-gate": "/thumbnails/automatic-door-gate.jpg",
-  "automatic-smart-fan": "/thumbnails/automatic-smart-fan.jpg",
-  "parking-light-system": "/thumbnails/parking-light-system.jpg",
-  "smart-scale": "/thumbnails/smart-scale.jpg",
-  "night-lamp": "/thumbnails/night-lamp.jpg",
-  "smart-fan": "/thumbnails/smart-fan.jpg",
-  "gas-leakage-alarm": "/thumbnails/gas-leakage-alarm.jpg",
-  "smart-dustbin": "/thumbnails/smart-dustbin.jpg",
-  "smart-home-model": "/thumbnails/smart-home-model.jpg",
-  "smart-agriculture": "/thumbnails/smart-agriculture.jpg",
-  "temperature-display-alarm": "/thumbnails/temperature-display-alarm.jpg",
-  "obstacle-alert": "/thumbnails/obstacle-alert.jpg",
-  "anti-theft-alarm": "/thumbnails/anti-theft-alarm.jpg",
-  "automatic-parking-gate": "/thumbnails/automatic-parking-gate.jpg",
-  "weather-monitoring": "/thumbnails/weather-monitoring.jpg",
-  "smart-energy-saver": "/thumbnails/smart-energy-saver.jpg",
-  "gas-safety-countdown": "/thumbnails/gas-safety-countdown.jpg",
-  "touch-free-attendance": "/thumbnails/touch-free-attendance.jpg",
-  "smart-air-quality": "/thumbnails/smart-air-quality.jpg",
-  "automatic-gate-counter": "/thumbnails/automatic-gate-counter.jpg",
-  "safety-helmet-alert": "/thumbnails/safety-helmet-alert.jpg",
-  "room-occupancy": "/thumbnails/room-occupancy.jpg",
-  "smart-bus-door": "/thumbnails/smart-bus-door.jpg",
-  "smart-glasses-blind": "/thumbnails/smart-glasses-blind.jpg",
-  "smart-cane-blind": "/thumbnails/smart-cane-blind.jpg",
-  "smart-shoes-blind": "/thumbnails/smart-shoes-blind.jpg",
-};
+const imageModules = import.meta.glob<{ default: string }>('../assets/ASSETS/*.jpg', { eager: true });
+
+const projectThumbnails: Record<string, string> = {};
+
+for (const path in imageModules) {
+  const filename = path.split('/').pop();
+  if (filename) {
+    const id = filename.replace('.jpg', '');
+    projectThumbnails[id] = imageModules[path].default;
+  }
+}
 
 export default projectThumbnails;
