@@ -776,97 +776,91 @@ void loop() {
     components: [
       { name: "Arduino UNO", description: "Calculates distance from sensor data", icon: "Cpu" },
       { name: "Ultrasonic Sensor (HC-SR04)", description: "Sends/receives sound waves for distance", icon: "Radio" },
-      { name: "LED (Green)", description: "Shows measurement is active", icon: "Lightbulb" },
-      { name: "Buzzer", description: "Click sound for each measurement", icon: "Volume2" },
+      { name: "OLED Display (SSD1306)", description: "Shows distance on screen", icon: "Monitor" },
       { name: "Breadboard & Wires", description: "For connections", icon: "Cable" }
     ],
     connectionSteps: [
       { step: 1, instruction: "Connect Ultrasonic VCC to 5V", pin: "5V", wireColor: "red" },
       { step: 2, instruction: "Connect Ultrasonic GND to GND", pin: "GND", wireColor: "black" },
       { step: 3, instruction: "Connect Ultrasonic TRIG to pin 3", pin: "D3", wireColor: "yellow" },
-      { step: 4, instruction: "Connect Ultrasonic ECHO to pin 4", pin: "D4", wireColor: "blue" },
-      { step: 5, instruction: "Connect LED (+) through resistor to pin 13", pin: "D13", wireColor: "green" },
-      { step: 6, instruction: "Connect LED (-) to GND", pin: "GND", wireColor: "black" },
-      { step: 7, instruction: "Connect Buzzer (+) to pin 8, (-) to GND", pin: "D8", wireColor: "orange" }
+      { step: 4, instruction: "Connect Ultrasonic ECHO to pin 2", pin: "D2", wireColor: "blue" },
+      { step: 5, instruction: "Connect OLED VCC to 5V", pin: "5V", wireColor: "red" },
+      { step: 6, instruction: "Connect OLED GND to GND", pin: "GND", wireColor: "black" },
+      { step: 7, instruction: "Connect OLED SDA to A4", pin: "A4", wireColor: "white" },
+      { step: 8, instruction: "Connect OLED SCL to A5", pin: "A5", wireColor: "green" }
     ],
     signalExplanation: [
       "TRIG sends 10μs pulse. ECHO receives reflected signal.",
       "Time × speed of sound ÷ 2 = distance in cm.",
       "We take 5 readings and average them for better accuracy."
     ],
-    code: `// Smart Scale - Distance Measurement
-// Class 8 - STEM Robotics Kit
+    code: `#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+// Ultrasonic pins
 int trigPin = 3;
-int echoPin = 4;
-int ledPin = 13;
-int buzzerPin = 8;
+int echoPin = 2;
+
+long duration;
+int distance;
 
 void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  pinMode(ledPin, OUTPUT);
-  pinMode(buzzerPin, OUTPUT);
+
   Serial.begin(9600);
-  Serial.println("===========================");
-  Serial.println("  Smart Scale Ready!");
-  Serial.println("  Point sensor at object");
-  Serial.println("===========================");
-}
 
-float getDistance() {
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-  long duration = pulseIn(echoPin, HIGH);
-  return duration * 0.034 / 2.0;
-}
-
-float getAverageDistance() {
-  float total = 0;
-  int validReadings = 0;
-  
-  for (int i = 0; i < 5; i++) {
-    float d = getDistance();
-    if (d > 0 && d < 400) {  // Valid range
-      total += d;
-      validReadings++;
-    }
-    delay(50);
+  // Initialize OLED
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println("OLED not found");
+    while(true);
   }
-  
-  return validReadings > 0 ? total / validReadings : -1;
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
 }
 
 void loop() {
-  digitalWrite(ledPin, HIGH);      // Measuring...
-  float distance = getAverageDistance();
-  digitalWrite(ledPin, LOW);
+  // Trigger pulse
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
   
-  if (distance > 0) {
-    tone(buzzerPin, 1500, 50);     // Click sound
-    
-    Serial.print("📏 Distance: ");
-    Serial.print(distance, 1);     // 1 decimal place
-    Serial.print(" cm  (");
-    Serial.print(distance / 100, 2);
-    Serial.print(" m)  |  ");
-    Serial.print(distance / 2.54, 1);
-    Serial.println(" inches");
-  } else {
-    Serial.println("❌ Out of range!");
-  }
-  
-  delay(500);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read echo
+  duration = pulseIn(echoPin, HIGH);
+
+  // Convert to cm
+  distance = duration * 0.034 / 2;
+
+  // Serial output
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // OLED display
+  display.clearDisplay();
+  display.setCursor(0, 20);
+  display.print(distance);
+  display.print(" cm");
+  display.display();
+
+  delay(300);
 }`,
     codeExplanation: [
-      "Takes 5 measurements and averages for accuracy",
-      "Filters out invalid readings (0 or >400cm)",
-      "Shows distance in cm, meters, and inches",
-      "LED blinks during measurement",
-      "Buzzer clicks to confirm each reading"
+      "Uses OLED display (SSD1306) for visual output",
+      "Triggers 10μs ultrasonic pulse for distance measurement",
+      "Calculates distance using speed of sound (0.034 cm/μs)",
+      "Displays result on 128x64 OLED screen"
     ]
   },
 
