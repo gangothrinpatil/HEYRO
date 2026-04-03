@@ -49,7 +49,7 @@ export default function ProjectAssistantPanel({ isOpen, onOpenChange, projectTit
     setIsGenerating(true);
 
     try {
-      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "dummy_key";
+      const apiKey = process.env.GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY;
       const ai = new GoogleGenAI({ apiKey });
 
       const systemInstruction = `You are Heyro, a friendly and encouraging AI teaching assistant for a STEM platform. You help students (Classes 6-8) learn Arduino, electronics, and coding. Keep your answers concise, encouraging, and easy to understand for middle schoolers. Use markdown for formatting. The user is currently working on the project: "${projectTitle}". Provide specific guidance and help related to this project.`;
